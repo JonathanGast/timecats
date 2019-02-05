@@ -66,7 +66,7 @@
                 timeOut: "",
                 description: ""
             };
-
+            /////////////////////////////////////////////////////////
             usSpinnerService.spin('spinner');
             $http.post("/Home/CreateTimeCard", data)
                 .then(function (response) {
@@ -84,7 +84,7 @@
                 }, function () {
                     usSpinnerService.stop('spinner');
                     toastr["error"]("Failed to create time.");
-                });
+                });////////////////////////////////
         }
 
         $scope.createTimeFromBlank = function (id) {
@@ -183,7 +183,7 @@
                     toastr["success"]("Group saved.");
                 }, function (response) {
                     if (response.status === 401) toastr["error"]("Unauthorized to change this group.");
-                    else toastr["error"]("Failed to save group, unknown error.");
+                    else toastr["error"]("Failed to save group, unknown error."); 
                 });
         }
 
@@ -265,7 +265,9 @@
                     toastr["success"]("Timeslot saved.");
                 }, function (response) {
                     if (response.status === 401) toastr["error"]("Unauthorized to edit this time entry.");
-                    else toastr["error"]("Failed to save time entry, unknown error.");
+                    else if (response.status === 400) toastr["error"]("Failed to save time entry due to : negative time or " +
+                        "clock out in the future.");
+                    else toastr["error"]( response.status.toString() + "Failed to save time entry, unknown error.");
                 });
         }
 

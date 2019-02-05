@@ -4727,10 +4727,11 @@
   },
   "libraries": {
     "BuildBundlerMinifier/2.8.391": {
-      "sha512": "JvnXAF6e55QKR9t+UcG/kVcWap22fHeKjkUcrJwl2N3vF/NpohuvZlBceqYF9S8aL8xOx6h+PX2plnymc23kiQ==",
+      "sha512": "+EJJ0URQVxRfk3jdmB9/WpFH3Q50tiA1paccMBlmbibPdQ8tuoeXLXDmnUGn9n5W5MM1Nu1CtSTiefiaWbGbqw==",
       "type": "package",
       "path": "buildbundlerminifier/2.8.391",
       "files": [
+        ".signature.p7s",
         "build/BuildBundlerMinifier.targets",
         "buildbundlerminifier.2.8.391.nupkg.sha512",
         "buildbundlerminifier.nuspec",
@@ -4746,10 +4747,11 @@
       ]
     },
     "Google.Protobuf/3.5.1": {
-      "sha512": "f2k1VNaB9bfvEsvARzzEL1TZiIpL33KKK3JMH7UANlPlJVptuvsk4qpBZEnz0pORWZOdUHlVwMQuUzFqjJYCxA==",
+      "sha512": "j/gbpRZ68sgvdi/vXI39Cj/jWG4d1dtDqfWbkjC9dErNWu/dFcIlq1LIgLscea+llZ6nzm06wz/JGziOegAL7Q==",
       "type": "package",
       "path": "google.protobuf/3.5.1",
       "files": [
+        ".signature.p7s",
         "google.protobuf.3.5.1.nupkg.sha512",
         "google.protobuf.nuspec",
         "lib/net45/Google.Protobuf.dll",
@@ -7404,10 +7406,11 @@
       ]
     },
     "MySql.Data/8.0.11": {
-      "sha512": "P5zKcnM2SVtdHD6gfReymJguIYLhNL5Og8Qm5TC9MEsSupsAYrRu4AB4nsbalrjqqv8VHBqVREWsXg9lY+q03A==",
+      "sha512": "11xjVthZlv/2Z5LHAO3vqATczeOq1H/Mef/yMtlYJW3DsLQNLZEX1l8CyXA2jByqQTZqXqg+v3NOrUQmZjMJHA==",
       "type": "package",
       "path": "mysql.data/8.0.11",
       "files": [
+        ".signature.p7s",
         "lib/net452/MySql.Data.dll",
         "lib/net452/MySql.Data.xml",
         "lib/netcoreapp2.0/MySql.Data.dll",
@@ -8394,10 +8397,11 @@
       ]
     },
     "System.Configuration.ConfigurationManager/4.4.0": {
-      "sha512": "gWwQv/Ug1qWJmHCmN17nAbxJYmQBM/E94QxKLksvUiiKB1Ld3Sc/eK1lgmbSjDFxkQhVuayI/cGFZhpBSodLrg==",
+      "sha512": "RLYB3YOmdz9dE3zMhBFGv3GF74upGjH0nF0G9lFFRLNLsCEMIpiuQsMGv2qE0qdp1JdheVNO8RIRpUKdokiK+g==",
       "type": "package",
       "path": "system.configuration.configurationmanager/4.4.0",
       "files": [
+        ".signature.p7s",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
         "lib/net461/System.Configuration.ConfigurationManager.dll",
@@ -11173,10 +11177,11 @@
       ]
     },
     "System.Security.Cryptography.ProtectedData/4.4.0": {
-      "sha512": "cJV7ScGW7EhatRsjehfvvYVBvtiSMKgN8bOVI0bQhnF5bU7vnHVIsH49Kva7i7GWaWYvmEzkYVk1TC+gZYBEog==",
+      "sha512": "WwEexvBd+17yfY7fcS+fBGl+HADEfCJuKeDJqBT7D6j6vKwYvfLyGuq2y/MmrKORC6mbYwth7kjinO1mPhTL3g==",
       "type": "package",
       "path": "system.security.cryptography.protecteddata/4.4.0",
       "files": [
+        ".signature.p7s",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
         "lib/MonoAndroid10/_._",
@@ -11285,10 +11290,11 @@
       ]
     },
     "System.Security.Permissions/4.4.0": {
-      "sha512": "ArK+Kh7BSqWhspqO3qe8R25MeUzBm3ZdWbYiN6Q0kLO3nR4dLeZzS03C0QUI/470w7pGRm7lUZ9sjfDQKJjRcQ==",
+      "sha512": "eeIuiiT15KEq9PKZbGagsCBmb7+z2Zphv3LcrINr2lHHvAGGsdWyq9YztLU2V77yoiqchH61iVH9//TvMY9+/A==",
       "type": "package",
       "path": "system.security.permissions/4.4.0",
       "files": [
+        ".signature.p7s",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
         "lib/net461/System.Security.Permissions.dll",
@@ -12472,23 +12478,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\netasha\\.nuget\\packages\\": {},
+    "C:\\Users\\jason\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\netasha\\Documents\\GitHub\\timecats\\time_sucks\\time_sucks.csproj",
+      "projectUniqueName": "C:\\Users\\jason\\Desktop\\CS4450\\timecats\\time_sucks\\time_sucks.csproj",
       "projectName": "time_sucks",
-      "projectPath": "C:\\Users\\netasha\\Documents\\GitHub\\timecats\\time_sucks\\time_sucks.csproj",
-      "packagesPath": "C:\\Users\\netasha\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\netasha\\Documents\\GitHub\\timecats\\time_sucks\\obj\\",
+      "projectPath": "C:\\Users\\jason\\Desktop\\CS4450\\timecats\\time_sucks\\time_sucks.csproj",
+      "packagesPath": "C:\\Users\\jason\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\jason\\Desktop\\CS4450\\timecats\\time_sucks\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\netasha\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\jason\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [

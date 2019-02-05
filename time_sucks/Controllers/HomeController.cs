@@ -1045,12 +1045,24 @@ namespace time_sucks.Controllers
 
         [HttpPost]
         public IActionResult SaveTime([FromBody]Object json)
-        {
+     {
             String JsonString = json.ToString();
 
             TimeCard timecard = JsonConvert.DeserializeObject<TimeCard>(JsonString);
 
-            if (IsAdmin() || GetUserID() == timecard.userID || IsInstructorForCourse(GetCourseForGroup(timecard.groupID)))
+            //  Jason   //////////////  START   ///////////////////////////////////////////////////////////////////
+            DateTime timeIn, timeOut;
+
+            //  Is time in a date?,  is time out a date?
+            //  are hours negative?, is time out a future date?     
+            if ((!DateTime.TryParse(timecard.timeIn,out timeIn) || !DateTime.TryParse(timecard.timeOut, out timeOut) ||
+                    ( timeOut.CompareTo(timeIn) < 0) || timeOut > DateTime.Now || timeIn > DateTime.Now))
+            { 
+                return BadRequest("Invalid time entered");
+            }
+            /////////////////////////////// END /////////////////////////////////////////////////////////////////
+            ///
+            else if (IsAdmin() || GetUserID() == timecard.userID || IsInstructorForCourse(GetCourseForGroup(timecard.groupID)))
             {
                 if (DBHelper.SaveTime(timecard)) return Ok();
                 return StatusCode(500);
