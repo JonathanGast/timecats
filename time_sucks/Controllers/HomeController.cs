@@ -151,7 +151,7 @@ namespace time_sucks.Controllers
 
         /// <summary>
         /// Returns true if the logged in user is a student for the passed courseID
-        /// </summary>
+        /// </summary>save
         /// <returns></returns>
         public bool UserIsStudentInCourse(int userID, int courseID)
         {
@@ -501,6 +501,36 @@ namespace time_sucks.Controllers
             }
             return Unauthorized();
         }
+
+
+        /*********************************************   Jamison Edit *************************************/
+
+        public IActionResult DeleteTimeCard([FromBody]Object json)
+        {
+            String JsonString = json.ToString();
+
+            TimeCard timeCard = JsonConvert.DeserializeObject<TimeCard>(JsonString);
+            int courseID = GetCourseForGroup(timeCard.groupID);
+
+            if (IsAdmin() || IsInstructorForCourse(courseID) || IsStudentInCourse(courseID))
+            {
+                if (GetUserType() == 'S' && GetUserID() == timeCard.userID)
+                {
+                    /*Changed to DELETE*/
+                    timeCard.timeslotID = (int)DBHelper.DeleteTimeCard(timeCard);
+                    return StatusCode(200);
+                }
+                else
+                {
+                    /*Changed to DELETE*/
+                    timeCard.timeslotID = (int)DBHelper.DeleteTimeCard(timeCard);
+                    return StatusCode(200);
+                }
+            }
+            return Unauthorized();
+        }
+
+        /******************************************** End Jamison Edit *************************************/
 
         /// <summary>
         /// Creates a project given a project object. Returns the project ID
