@@ -1050,7 +1050,9 @@ namespace time_sucks.Controllers
 
             TimeCard timecard = JsonConvert.DeserializeObject<TimeCard>(JsonString);
 
-            //  Jason   //////////////  START   ///////////////////////////////////////////////////////////////////
+            //  Jason Steadman - - Notes:  Checks the time input on the server side to stop any manual posts that
+            //                      are not valid.
+            /////////////////////////////////////////////////////////////////////////////////////////////////////
             DateTime timeIn, timeOut;
 
             //  Is time in a date?,  is time out a date?

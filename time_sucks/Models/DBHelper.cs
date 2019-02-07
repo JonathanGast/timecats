@@ -6,12 +6,19 @@ namespace time_sucks.Models
 {
     public class DBHelper
     {
-        //TODO Make this a better system user
+        //TODO Make this a better system user 
+        /*
         static private MySqlConnectionStringBuilder connstring = new MySqlConnectionStringBuilder("" +
             "Server=cs4450.cj7o28wmyp47.us-east-2.rds.amazonaws.com;" +
             "UID=Logan;" +
             "password=password;" +
-            "database=cs4450");
+            "database=cs4450"); */
+
+        static private MySqlConnectionStringBuilder connstring = new MySqlConnectionStringBuilder("" +
+            "Server=localhost;" +
+            "UID=Logan;" +
+            "password=password;" +
+            "database=timecats");
 
         public static long AddUser(User user)
         {
@@ -1907,8 +1914,14 @@ namespace time_sucks.Models
 
                     if (cmd.ExecuteNonQuery() > 0)
                     {
+                        //  Jason Steadman - - Notes:  Added to delete all questions that below to a deleted category.
+                        //////////////////////////////////////////////////////////////////////////////////////
+                        cmd.CommandText = "DELETE FROM evalTemplateQuestions " +
+                                      "WHERE evalTemplateQuestionCategoryID = @evalTemplateQuestionCategoryID";
+                        /////////////////////////////////////////////////////////////////////////////////////////
+                        /*
                         cmd.CommandText = "UPDATE evalTemplateQuestions SET evalTemplateQuestionCategoryID = 0 " +
-                                          "WHERE evalTemplateQuestionCategoryID = @evalTemplateQuestionCategoryID";
+                                          "WHERE evalTemplateQuestionCategoryID = @evalTemplateQuestionCategoryID"; */
                         cmd.ExecuteNonQuery();
                         return true;
                     }
