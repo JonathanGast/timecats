@@ -7,19 +7,19 @@ namespace time_sucks.Models
     public class DBHelper
     {
         //TODO Make this a better system user 
-       
+       /*
         static private MySqlConnectionStringBuilder connstring = new MySqlConnectionStringBuilder("" +
             "Server=cs4450.cj7o28wmyp47.us-east-2.rds.amazonaws.com;" +
             "UID=Logan;" +
             "password=password;" +
-            "database=cs4450"); 
+            "database=cs4450");     */
 
-        /* Local version
+        // Local version
         static private MySqlConnectionStringBuilder connstring = new MySqlConnectionStringBuilder("" +
             "Server=localhost;" +
             "UID=Logan;" +
             "password=password;" +
-            "database=timecats");   */
+            "database=cs4450");   
 
         public static long AddUser(User user)
         {
@@ -196,7 +196,7 @@ namespace time_sucks.Models
                 using (MySqlCommand cmd = conn.CreateCommand())
                 {
                     //SQL and Parameters
-                    cmd.CommandText = "INSERT INTO groups (groupName, isActive, evalID, projectID) " +
+                    cmd.CommandText = "INSERT INTO cs4450.groups (groupName, isActive, evalID, projectID) " +
                                       "VALUES ('New Group', 1, 0, @projectID);";
                     cmd.Parameters.AddWithValue("@projectID", projectID);
 
@@ -374,7 +374,7 @@ namespace time_sucks.Models
                           "date_format(t.timeIn, '%m/%d/%Y %l:%i %p') AS 'timeIn', date_format(t.timeOut, '%m/%d/%Y %l:%i %p') AS 'timeOut', " +
                           "t.description AS 'timeDescription', t.isEdited, t.userID AS 'tuserID', ug.isActive AS isActiveInGroup " +
                         "FROM projects p " +
-                        "Left Join groups g On p.projectID = g.projectID " +
+                        "Left Join cs4450.groups g On p.projectID = g.projectID " +
                         "Left Join uGroups ug On ug.groupID = g.groupID " +
                         "Left Join users u On u.userID = ug.userID " +
                         "Left Join timeCards t On (u.userID = t.userID AND g.groupID = t.groupID) " +
@@ -532,7 +532,7 @@ namespace time_sucks.Models
                 {
                     //SQL and Parameters
                     cmd.CommandText = "SELECT c.courseID FROM courses c LEFT JOIN projects p ON (c.courseID = p.courseID) " +
-                        "LEFT JOIN groups g ON (p.projectID = g.projectID) WHERE g.groupID = @groupID";
+                        "LEFT JOIN cs4450.groups g ON (p.projectID = g.projectID) WHERE g.groupID = @groupID";
                     cmd.Parameters.AddWithValue("@groupID", groupID);
 
                     using (MySqlDataReader reader = cmd.ExecuteReader())
@@ -622,7 +622,7 @@ namespace time_sucks.Models
                     cmd.CommandText = "Select g.*, u.userID, u.firstName, u.lastName, t.groupID AS 'tgroupID', t.timeID, " +
                                       "date_format(t.timeIn, '%m/%d/%Y %l:%i %p') AS 'timeIn', date_format(t.timeOut, '%m/%d/%Y %l:%i %p') AS 'timeOut', " +
                                       "t.description, t.isEdited, t.userID AS 'tuserID', ug.isActive AS isActiveInGroup  " +
-                                      "From groups g Left Join uGroups ug On " +
+                                      "From cs4450.groups g Left Join uGroups ug On " +
                                       "ug.groupID = g.groupID " +
                                       "Left Join users u On " +
                                       "u.userID = ug.userID " +
@@ -805,7 +805,7 @@ namespace time_sucks.Models
                     //SQL and Parameters
                     cmd.CommandText = "SELECT g.groupID, g.groupName, p.projectID, p.projectName, c.courseID, c.courseName, " +
                         "u.userID AS 'instructorID', CONCAT(u.firstName, ' ',u.lastName) as instructorName FROM uGroups uG " +
-                        "LEFT JOIN groups g ON g.groupID = uG.groupID " +
+                        "LEFT JOIN cs4450.groups g ON g.groupID = uG.groupID " +
                         "LEFT JOIN projects p ON g.projectID = p.projectID " +
                         "LEFT JOIN courses c on p.courseID = c.courseID " +
                         "LEFT JOIN users u ON c.instructorID = u.userID " +
@@ -885,7 +885,7 @@ namespace time_sucks.Models
                     cmd.CommandText = "SELECT e.*, CONCAT(u.firstName, ' ', u.lastName) AS usersName, g.groupName, p.projectID, p.projectName, " +
                                           "c.courseID, c.courseName, et.templateName, c.instructorID, CONCAT(ui.firstName, ' ', ui.lastName) AS instructorName " +
                                         "FROM evals e " +
-                                        "LEFT JOIN groups g on e.groupID = g.groupID " +
+                                        "LEFT JOIN cs4450.groups g on e.groupID = g.groupID " +
                                         "LEFT JOIN users u on e.userID = u.userID " +
                                         "LEFT JOIN projects p on g.projectID = p.projectID " +
                                         "LEFT JOIN courses c on p.courseID = c.courseID " +
@@ -1629,8 +1629,8 @@ namespace time_sucks.Models
                 {
                     //SQL and Parameters
                     cmd.CommandText = " Select u.userID, u.firstName, u.lastName, ug.groupID From users u " +
-                        "Inner Join uGroups ug On u.userID = ug.userID Inner Join groups g On ug.groupID = g.groupID Where u.userID = @userID " +
-                        "And g.projectID = 	(SELECT projectID FROM groups WHERE groupID = @groupID) " +
+                        "Inner Join uGroups ug On u.userID = ug.userID Inner Join cs4450.groups g On ug.groupID = g.groupID Where u.userID = @userID " +
+                        "And g.projectID = 	(SELECT projectID FROM cs4450.groups WHERE groupID = @groupID) " +
                         "And ug.isActive = 1";
                     cmd.Parameters.AddWithValue("@userID", userID);
                     cmd.Parameters.AddWithValue("@groupID", groupID);
@@ -1658,7 +1658,7 @@ namespace time_sucks.Models
                 {
                     //SQL and Parameters
                     cmd.CommandText = " Select u.userID, u.firstName, u.lastName, ug.groupID From users u " +
-                                      "Inner Join uGroups ug On u.userID = ug.userID Inner Join groups g On ug.groupID = g.groupID Where u.userID = @userID " +
+                                      "Inner Join uGroups ug On u.userID = ug.userID Inner Join cs4450.groups g On ug.groupID = g.groupID Where u.userID = @userID " +
                                       "And g.projectID = @projectID " +
                                       "And ug.isActive = 1";
                     cmd.Parameters.AddWithValue("@userID", userID);
@@ -1845,7 +1845,7 @@ namespace time_sucks.Models
                 using (MySqlCommand cmd = conn.CreateCommand())
                 {
                     // SQL and Parameters
-                    cmd.CommandText = "UPDATE groups SET groupName = @groupName, " +
+                    cmd.CommandText = "UPDATE cs4450.groups SET groupName = @groupName, " +
                                       "isActive = @isActive, evalID = @evalID, projectID = @projectID WHERE groupID = @groupID";
                     cmd.Parameters.AddWithValue("@groupName", group.groupName);
                     cmd.Parameters.AddWithValue("@isActive", group.isActive);
@@ -2238,7 +2238,7 @@ namespace time_sucks.Models
                     using (MySqlCommand cmd = conn.CreateCommand())
                     {
                         //SQL and Parameters
-                        cmd.CommandText = "Select g.groupID From groups g Inner Join uGroups ug On g.groupID = ug.groupID " +
+                        cmd.CommandText = "Select g.groupID From cs4450.groups g Inner Join uGroups ug On g.groupID = ug.groupID " +
                             "INNER Join users u On ug.userID = u.userID Where projectID = @projectID AND g.isActive = 1 AND ug.isActive = 1 " +
                             "GROUP BY g.groupID";
 

@@ -2,6 +2,7 @@
     $scope.loaded = false;
     $scope.group = {};
     $scope.group.users = {};
+
     //$scope.newNumber = 13; //TODO get rid of this
 
     $scope.load = function () {
@@ -204,6 +205,11 @@
             $.each($scope.group.users, function (index, user) {
                 if (Number(user.userID) === Number($scope.$parent.user.userID)) {
                     inGroup = true;
+                    //  Jason Steadman  Notes:  Give the user the ability to change the group name when the name is set
+                    //                          to "New Group" or "new group" (which is the default group name)
+                    if ($scope.group.groupName === "New Group" || $scope.group.groupName === "new group")
+                        document.getElementById("group_name").readOnly = false;
+                    /////////////////////////////////////////////////////////////////////////////////////
                 }
             });
             return inGroup;
