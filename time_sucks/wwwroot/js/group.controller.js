@@ -4,11 +4,11 @@
     $scope.group.users = {};
     //$scope.newNumber = 13; //TODO get rid of this
 
-    $scope.load = function() {
+    $scope.load = function () {
         $scope.groupID = $routeParams.ID;
 
         if (!$scope.groupID) $location.path('/courses');
-        
+
         //TODO Enable Group functionality, disable dummy data
         usSpinnerService.spin('spinner');
         $http.post("/Home/GetGroup", { groupID: $scope.groupID })
@@ -48,7 +48,7 @@
 
         $.each($scope.group.users, function (userID, user) {
             $scope.group.users[userID].blank = {
-                timeslotID: userID+'-blank',
+                timeslotID: userID + '-blank',
                 hours: '',
                 isEdited: false,
                 timeIn: '',
@@ -66,7 +66,7 @@
                 timeOut: "",
                 description: ""
             };
-
+            /////////////////////////////////////////////////////////
             usSpinnerService.spin('spinner');
             $http.post("/Home/CreateTimeCard", data)
                 .then(function (response) {
@@ -84,7 +84,7 @@
                 }, function () {
                     usSpinnerService.stop('spinner');
                     toastr["error"]("Failed to create time.");
-                });
+                });////////////////////////////////
         }
 
         $scope.createTimeFromBlank = function (id) {
@@ -99,6 +99,14 @@
 
             if ($scope.group.users[id].blank.timeIn === '' && $scope.group.users[id].blank.timeOut === '' && $scope.group.users[id].blank.description === '')
                 return;
+
+            /*********************************************Jamison Edit*********************************/
+            if (data.timeIn > moment().format('MM/DD/YYYY h:mm A')) {
+                $scope.group.users[id].blank.timeIn = '';
+                toastr["error"]("Invalid Start Time: Slot Not Created");
+                return;
+            }
+            /********************************************End Jamison Edit******************************/
 
             usSpinnerService.spin('spinner');
             $http.post("/Home/CreateTimeCard", data)
@@ -123,7 +131,7 @@
                 });
         }
 
-        $scope.leaveGroup = function() {
+        $scope.leaveGroup = function () {
             if (confirm('Are you sure you want to leave this group?')) {
                 usSpinnerService.spin('spinner');
                 $http.post("/Home/LeaveGroup", { groupID: $scope.groupID })
@@ -162,7 +170,7 @@
                     }
                     usSpinnerService.stop('spinner');
                     toastr["success"]("You have joined the group.");
-                    
+
                 }, function (response) {
                     usSpinnerService.stop('spinner');
                     if (response.status === 401) toastr["error"]("You are not part of this course.");
@@ -183,7 +191,7 @@
                     toastr["success"]("Group saved.");
                 }, function (response) {
                     if (response.status === 401) toastr["error"]("Unauthorized to change this group.");
-                    else toastr["error"]("Failed to save group, unknown error.");
+                    else toastr["error"]("Failed to save group, unknown error."); 
                 });
         }
 
@@ -232,7 +240,7 @@
                 toastr["error"]("The logged in user isn't a member of the group.");
             }
         }
-
+        ///This happens when the user presses the clock in/out button////
         $scope.endTime = function () {
             if ($scope.userInGroup()) {
                 $.each($scope.group.users[$scope.$parent.user.userID].timecards, function (index, time) {
@@ -250,29 +258,69 @@
             }
         }
 
+        /***************************************Jamison Edit **************************************************/
+        /* 
+        * @param {any} userID
+        * @param {any} timeslotID
+        */
+        $scope.deleteTime = function (userID, timeslotID) {
+            toastr["warning"]("Deleting...");           
+            $http.post("/Home/DeleteTimeCard", $scope.group.users[userID].timecards[timeslotID])
+                .then(function (response) {
+                    window.location.reload();
+                });
+        }
+
+        /**
+         * ************************************************* End Jamison Edit *****************************************/
+        
         $scope.saveTime = function (userID, timeslotID) {
+            /******************************************************Jamison Edit**********************************************/
+            if ($scope.group.users[userID].timecards[timeslotID].timeIn > moment().format('MM/DD/YYYY h:mm A')) {
+                toastr["error"]("TimeIn > Current Date");
+                $scope.group.users[userID].timecards[timeslotID].timeIn = moment().format('MM/DD/YYYY h:mm A');
+            }
+            if ($scope.group.users[userID].timecards[timeslotID].timeOut > moment().format('MM/DD/YYYY h:mm A')) {
+                toastr["error"]("TimeOut > Current Date");
+                $scope.group.users[userID].timecards[timeslotID].timeOut = moment().format('MM/DD/YYYY h:mm A');
+            }
+
+            
+            if ($scope.group.users[userID].timecards[timeslotID].timeIn > $scope.group.users[userID].timecards[timeslotID].timeOut || $scope.group.users[userID].timecards[timeslotID].timeIn === $scope.group.users[userID].timecards[timeslotID].timeOut) {
+                if ($scope.group.users[userID].timecards[timeslotID].timeOut !== '') {
+                    $scope.group.users[userID].timecards[timeslotID].timeOut = '';
+                    $scope.group.users[userID].timecards[timeslotID].hours = 0;
+
+                    toastr["error"]("Invalid Time Input");
+                }
+            }
+            /******************************************************End Jamison Edit*****************************************/
 
             $http.post("/Home/SaveTime", $scope.group.users[userID].timecards[timeslotID])
                 .then(function (response) {
                     if ($scope.group.users[userID].timecards[timeslotID].timeIn === '' || $scope.group.users[userID].timecards[timeslotID].timeOut === '') {
                         $scope.group.users[userID].timecards[timeslotID].hours = 0;
-                    } else {
+                    }
+                        else {
                         $scope.group.users[userID].timecards[timeslotID].hours = moment.duration(
                             moment($scope.group.users[userID].timecards[timeslotID].timeOut).diff(
                                 $scope.group.users[userID].timecards[timeslotID].timeIn)).asHours().toFixed(2);
                     }
+                   
                     $scope.updateChart();
-                    toastr["success"]("Timeslot saved.");
+                    toastr["info"]("Timeslot Updated.");
                 }, function (response) {
                     if (response.status === 401) toastr["error"]("Unauthorized to edit this time entry.");
-                    else toastr["error"]("Failed to save time entry, unknown error.");
+                    else if (response.status === 400) toastr["error"]("Failed to save time entry due to : negative time or " +
+                        "clock out in the future.");
+                    else toastr["error"]( response.status.toString() + "Failed to save time entry, unknown error.");
                 });
         }
 
         $scope.diffHours = function (timeIn, timeOut) {
             if (timeIn === '' || timeOut === '') return "0.00";
             return moment.duration(moment(timeOut).diff(timeIn)).asHours().toFixed(2);
-        }
+        }        
 
         //Used to check whether the currently logged in user is trying to change their own time, or is an instructor
         $scope.isUser = function (id) {

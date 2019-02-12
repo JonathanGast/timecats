@@ -151,7 +151,7 @@ namespace time_sucks.Controllers
 
         /// <summary>
         /// Returns true if the logged in user is a student for the passed courseID
-        /// </summary>
+        /// </summary>save
         /// <returns></returns>
         public bool UserIsStudentInCourse(int userID, int courseID)
         {
@@ -501,6 +501,36 @@ namespace time_sucks.Controllers
             }
             return Unauthorized();
         }
+
+
+        /*********************************************   Jamison Edit *************************************/
+
+        public IActionResult DeleteTimeCard([FromBody]Object json)
+        {
+            String JsonString = json.ToString();
+
+            TimeCard timeCard = JsonConvert.DeserializeObject<TimeCard>(JsonString);
+            int courseID = GetCourseForGroup(timeCard.groupID);
+
+            if (IsAdmin() || IsInstructorForCourse(courseID) || IsStudentInCourse(courseID))
+            {
+                if (GetUserType() == 'S' && GetUserID() == timeCard.userID)
+                {
+                    /*Changed to DELETE*/
+                    timeCard.timeslotID = (int)DBHelper.DeleteTimeCard(timeCard);
+                    return StatusCode(200);
+                }
+                else
+                {
+                    /*Changed to DELETE*/
+                    timeCard.timeslotID = (int)DBHelper.DeleteTimeCard(timeCard);
+                    return StatusCode(200);
+                }
+            }
+            return Unauthorized();
+        }
+
+        /******************************************** End Jamison Edit *************************************/
 
         /// <summary>
         /// Creates a project given a project object. Returns the project ID
@@ -1045,12 +1075,26 @@ namespace time_sucks.Controllers
 
         [HttpPost]
         public IActionResult SaveTime([FromBody]Object json)
-        {
+     {
             String JsonString = json.ToString();
 
             TimeCard timecard = JsonConvert.DeserializeObject<TimeCard>(JsonString);
 
-            if (IsAdmin() || GetUserID() == timecard.userID || IsInstructorForCourse(GetCourseForGroup(timecard.groupID)))
+            //  Jason Steadman - - Notes:  Checks the time input on the server side to stop any manual posts that
+            //                      are not valid.
+            /////////////////////////////////////////////////////////////////////////////////////////////////////
+            DateTime timeIn, timeOut;
+
+            //  Is time in a date?,  is time out a date?
+            //  are hours negative?, is time out a future date?     
+            if ((!DateTime.TryParse(timecard.timeIn,out timeIn) || !DateTime.TryParse(timecard.timeOut, out timeOut) ||
+                    ( timeOut.CompareTo(timeIn) < 0) || timeOut > DateTime.Now || timeIn > DateTime.Now))
+            { 
+                return BadRequest("Invalid time entered");
+            }
+            /////////////////////////////// END /////////////////////////////////////////////////////////////////
+            ///
+            else if (IsAdmin() || GetUserID() == timecard.userID || IsInstructorForCourse(GetCourseForGroup(timecard.groupID)))
             {
                 if (DBHelper.SaveTime(timecard)) return Ok();
                 return StatusCode(500);

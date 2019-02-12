@@ -6,12 +6,20 @@ namespace time_sucks.Models
 {
     public class DBHelper
     {
-        //TODO Make this a better system user
+        //TODO Make this a better system user 
+       
         static private MySqlConnectionStringBuilder connstring = new MySqlConnectionStringBuilder("" +
             "Server=cs4450.cj7o28wmyp47.us-east-2.rds.amazonaws.com;" +
             "UID=Logan;" +
             "password=password;" +
-            "database=cs4450");
+            "database=cs4450"); 
+
+        /* Local version
+        static private MySqlConnectionStringBuilder connstring = new MySqlConnectionStringBuilder("" +
+            "Server=localhost;" +
+            "UID=Logan;" +
+            "password=password;" +
+            "database=timecats");   */
 
         public static long AddUser(User user)
         {
@@ -228,6 +236,38 @@ namespace time_sucks.Models
                 }
             }
         }
+
+        /*********************************************** Jamison Edit *****************************************/
+
+        public static long DeleteTimeCard(TimeCard timeCard)
+        {
+            using (var conn = new MySqlConnection(connstring.ToString()))
+            {
+                conn.Open();
+                using (MySqlCommand cmd = conn.CreateCommand())
+                {
+                    //SQL and Parameters
+                    cmd.CommandText = "DELETE FROM timeCards WHERE timeIn = @timeIn AND timeOut = @timeOut AND userID  = @userID AND groupID = @groupID AND description = @description;";
+
+                    if (timeCard.timeIn == null || timeCard.timeIn == "") cmd.Parameters.AddWithValue("@timeIn", null);
+                    else cmd.Parameters.AddWithValue("@timeIn", Convert.ToDateTime(timeCard.timeIn));
+                    if (timeCard.timeOut == null || timeCard.timeOut == "") cmd.Parameters.AddWithValue("@timeOut", null);
+                    else cmd.Parameters.AddWithValue("@timeOut", Convert.ToDateTime(timeCard.timeOut));
+                    cmd.Parameters.AddWithValue("@userID", timeCard.userID);
+                    cmd.Parameters.AddWithValue("@groupID", timeCard.groupID);
+                    if (timeCard.description == null) cmd.Parameters.AddWithValue("@description", "");
+                    else cmd.Parameters.AddWithValue("@description", timeCard.description);
+
+
+                    //Return the last inserted ID if successful
+                    if (cmd.ExecuteNonQuery() > 0) return cmd.LastInsertedId;
+
+                    return 0;
+                }
+            }
+        }
+
+        /************************************************* End Edit ***********************************************/
 
         public static bool DeleteUserCourse(int userID, int courseID)
         {
@@ -1907,8 +1947,14 @@ namespace time_sucks.Models
 
                     if (cmd.ExecuteNonQuery() > 0)
                     {
+                        //  Jason Steadman - - Notes:  Added to delete all questions that below to a deleted category.
+                        //////////////////////////////////////////////////////////////////////////////////////
+                        cmd.CommandText = "DELETE FROM evalTemplateQuestions " +
+                                      "WHERE evalTemplateQuestionCategoryID = @evalTemplateQuestionCategoryID";
+                        /////////////////////////////////////////////////////////////////////////////////////////
+                        /*
                         cmd.CommandText = "UPDATE evalTemplateQuestions SET evalTemplateQuestionCategoryID = 0 " +
-                                          "WHERE evalTemplateQuestionCategoryID = @evalTemplateQuestionCategoryID";
+                                          "WHERE evalTemplateQuestionCategoryID = @evalTemplateQuestionCategoryID"; */
                         cmd.ExecuteNonQuery();
                         return true;
                     }
