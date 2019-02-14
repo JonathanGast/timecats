@@ -7,19 +7,19 @@ namespace time_sucks.Models
     public class DBHelper
     {
         //TODO Make this a better system user 
-       /*
+       
         static private MySqlConnectionStringBuilder connstring = new MySqlConnectionStringBuilder("" +
             "Server=cs4450.cj7o28wmyp47.us-east-2.rds.amazonaws.com;" +
             "UID=Logan;" +
             "password=password;" +
-            "database=cs4450");     */
-
+            "database=cs4450");     
+        /*
         // Local version
         static private MySqlConnectionStringBuilder connstring = new MySqlConnectionStringBuilder("" +
             "Server=localhost;" +
             "UID=Logan;" +
             "password=password;" +
-            "database=cs4450");   
+            "database=cs4450");   */
 
         public static long AddUser(User user)
         {

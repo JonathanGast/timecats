@@ -207,14 +207,15 @@
                     inGroup = true;
                     //  Jason Steadman  Notes:  Give the user the ability to change the group name when the name is set
                     //                          to "New Group" or "new group" (which is the default group name)
-                    if ($scope.group.groupName === "New Group" || $scope.group.groupName === "new group")
+                    if ($scope.group.groupName === "New Group" || $scope.group.groupName === "new group") {
                         document.getElementById("group_name").readOnly = false;
+                    }
                     /////////////////////////////////////////////////////////////////////////////////////////////////
                 }
             });
             return inGroup;
         }
-
+        
         $scope.userActiveInGroup = function () {
             //Checks that the current user is listed in the current group.
             if (!$scope.$parent.user) return false;
