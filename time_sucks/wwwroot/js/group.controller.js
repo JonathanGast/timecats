@@ -209,7 +209,7 @@
                     //                          to "New Group" or "new group" (which is the default group name)
                     if ($scope.group.groupName === "New Group" || $scope.group.groupName === "new group")
                         document.getElementById("group_name").readOnly = false;
-                    /////////////////////////////////////////////////////////////////////////////////////
+                    /////////////////////////////////////////////////////////////////////////////////////////////////
                 }
             });
             return inGroup;
