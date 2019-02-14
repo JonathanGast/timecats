@@ -278,7 +278,7 @@
         $scope.deleteQuestion = function (question) {
             if (confirm('Are you sure you want to delete this question?')) {
                 usSpinnerService.spin('spinner');
-                $http.post("/Home/DeleteQuestion", { evalTemplateQuestionID: question.evalTemplateQuestionID })
+                $http.post("/Home/DeleteQuestion", { evalTemplateID: $scope.config.currentTemplate, evalTemplateQuestionID: question.evalTemplateQuestionID })
                     .then(function (response) {
                         usSpinnerService.stop('spinner');
                         toastr["success"]("Question deleted.");
