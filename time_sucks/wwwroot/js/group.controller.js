@@ -274,7 +274,7 @@
             toastr["warning"]("Deleting...");           
             $http.post("/Home/DeleteTimeCard", $scope.group.users[userID].timecards[timeslotID])
                 .then(function (response) {
-                    window.location.reload();
+                    window.location.reload();        
                 });
         }
 
