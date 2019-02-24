@@ -67,7 +67,7 @@
                 timeOut: "",
                 description: ""
             };
-            /////////////////////////////////////////////////////////
+            
             usSpinnerService.spin('spinner');
             $http.post("/Home/CreateTimeCard", data)
                 .then(function (response) {
@@ -85,7 +85,7 @@
                 }, function () {
                     usSpinnerService.stop('spinner');
                     toastr["error"]("Failed to create time.");
-                });////////////////////////////////
+                });
         }
 
         $scope.createTimeFromBlank = function (id) {

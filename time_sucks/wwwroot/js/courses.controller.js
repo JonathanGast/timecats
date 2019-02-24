@@ -29,6 +29,15 @@
         $scope.loaded = true;
     }
 
+    $scope.courseSort = function (course) {
+        if (course.instructorName === parent.user.username) {
+            confirm("Hit");
+            return Number.MAX_VALUE;
+        }
+        confirm("Miss");
+        return course;
+    }
+
     //Standard login check, if there is a user, load the page, if not, redirect to login
     usSpinnerService.spin('spinner');
     $http.get("/Home/CheckSession")
