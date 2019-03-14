@@ -16,12 +16,12 @@
     <table class="table table-hover">
         <thead>
             <tr>
-                <th>Test</th>
+                <th>Course Name</th>
                 <th>Instructor</th>
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="c in courses | orderObjectBy :'courseName' | filter: search" ng-if="c.isActive || config.showInactiveCourses" ng-class="{inactive: !c.isActive}">
+            <tr ng-repeat="c in courses | orderBy: 'instructorName':false:courseSort | filter: search" ng-if="c.isActive || config.showInactiveCourses" ng-class="{inactive: !c.isActive}">
                 <td><a href="/#!/course/{{c.courseID}}">{{c.courseName}}</a></td>
                 <td>{{c.instructorName}}</td>
             </tr>
