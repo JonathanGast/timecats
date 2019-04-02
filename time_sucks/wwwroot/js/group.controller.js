@@ -395,6 +395,26 @@
         });
 
         $scope.updateChart = function () {
+            //  Jason Steadman
+            //  Creates a display for a empty chart.
+
+            var hours = 0;
+            for (var u in $scope.group.users) {
+                u = $scope.group.users[u];
+                for (var t in u.timecards) {
+                    t = u.timecards[t];
+                    hours += Number(t.hours);
+                }
+            }
+            if (hours === 0) {
+                document.getElementById("groupHours").style.visibility = "hidden";
+                document.getElementById("noData").style.visibility = "visible";
+            }
+            else {
+                document.getElementById("groupHours").style.visibility = "visible";
+                document.getElementById("noData").style.visibility = "hidden";
+            }
+            ////////////////////////////////////////////////////////////////////////
             $scope.setData();
             myChart.update();
         }
