@@ -7,20 +7,20 @@ namespace time_sucks.Models
     public class DBHelper
     {
         //TODO Make this a better system user 
-       
+       /*
         static private MySqlConnectionStringBuilder connstring = new MySqlConnectionStringBuilder("" +
             "Server=cs4450.cj7o28wmyp47.us-east-2.rds.amazonaws.com;" +
             "UID=Logan;" +
             "password=password;" +
-            "database=cs4450"); 
-
-        /* Local version
+            "database=cs4450");     
+        /*/
+        // Local version
         static private MySqlConnectionStringBuilder connstring = new MySqlConnectionStringBuilder("" +
             "Server=localhost;" +
             "UID=Logan;" +
             "password=password;" +
-            "database=timecats");   */
-
+            "database=cs4450");   
+        
         public static long AddUser(User user)
         {
             if (user.username != null) user.username = user.username.ToLower();
@@ -583,7 +583,8 @@ namespace time_sucks.Models
                 {
                     cmd.CommandText = "Select c.*, CONCAT(u.firstName, ' ',u.lastName) as instructorName " +
                         "FROM courses c " +
-                        "LEFT JOIN users u ON (c.instructorID = u.userID)";
+                        "LEFT JOIN users u ON (c.instructorID = u.userID) " +
+                        "ORDER BY courseName DESC";
 
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {

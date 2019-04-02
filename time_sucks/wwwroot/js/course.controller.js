@@ -141,7 +141,7 @@
             var inCourse = false;
             if (!$scope.course) return false;
             $.each($scope.course.users, function (index, user) {
-                if (user.userID === $scope.$parent.user.userID) {
+                if (user.userID === $scope.$parent.user.userID ) {
                     inCourse = true;
                 }
             });

@@ -1,22 +1,25 @@
 ﻿<div id="group"  ng-cloak>
     <div class="row position-relative">
         <h4 class="mt-3 col-sm-9 col-12 float-left">
-            <input class="input-header" type="text" name="groupName" ng-model-options="{debounce: 750}" ng-change="saveGroup()" ng-model="group.groupName" ng-class="{'input-header-admin': ($parent.user.type === 'A' || userInGroup() || $parent.user.type === 'I')}"
-                                                            ng-readonly="$parent.user.type !== 'A'|| $parent.user.type !== 'I'"/></h4> 
-                    <!-- Jason Steadman - - Note:  Gives only admins and instructors the ability to edit group names -->
+            <input id="group_name" class="input-header" type="text" name="groupName" ng-model-options="{debounce: 750}" ng-change="saveGroup()" ng-model="group.groupName" ng-class="{'input-header-admin': ($parent.user.type === 'A' || userInGroup() || $parent.user.type === 'I')}"
+                   ng-readonly="$parent.user.type !== 'A' && $parent.user.type !== 'I'" />
+        </h4>
+        <!-- Jason Steadman - - Note:  Gives only admins and instructors the ability to edit group names -->
+      <!-- <input class="input-header" type="text" name="groupName" ng-model-options="{debounce: 750}" ng-change="saveGroup()" ng-model="group.groupName" ng-class="{'input-header-admin': ($parent.user.type === 'A' || userInGroup() || $parent.user.type === 'I')}" -->
                                                            <!-- ng-readonly="$parent.user.type !== 'A' && !userInGroup() && $parent.user.type !== 'I'"/></h4> -->
-            <div class="mt-3 pretty p-switch p-slim col-sm-2 col-12 header-checkbox" ng-if="$parent.user.type === 'A' || $parent.user.type === 'I'">
-                <input type="checkbox" ng-model="group.isActive" ng-change="saveGroup()" />
-                <div class="mt-2 state float-right">
-                    <label>Active</label>
-                </div>
+        <div class="mt-3 pretty p-switch p-slim col-sm-2 col-12 header-checkbox" ng-if="$parent.user.type === 'A' || $parent.user.type === 'I'">
+            <input type="checkbox" ng-model="group.isActive" ng-change="saveGroup()" />
+            <div class="mt-2 state float-right">
+                <label>Active</label>
             </div>
-</div>
+        </div>
+    </div>
 
-
+    
     <div class="row mt-4">
         <div class="col-sm-6 col-md-5 col-lg-4 col-12">
             <canvas id="groupHours" width="400" height="400"></canvas>
+            <img class="noDataFound" id="noData" src="noDataFound-310x310.png" alt="No Data Entered" width="400" height="400" />
         </div>
 
 
@@ -24,8 +27,8 @@
             <div class="position-relative">
                 <h5>Users</h5>
                 <div class="float-right top-right-buttons">
-                    <button class="btn btn-primary" ng-click="joinGroup()" ng-if="!userInGroup() || !group.users[$parent.user.userID].isActive">Join</button>
-                    <button class="btn btn-danger" ng-click="leaveGroup()" ng-if="userInGroup() && group.users[$parent.user.userID].isActive">Leave</button>
+                    <button class="btn btn-primary" ng-click="joinGroup()" ng-if="(!userInGroup() || !group.users[$parent.user.userID].isActive) && $parent.user.userID !== course.instructorID">Join Group</button>
+                    <button class="btn btn-danger" ng-click="leaveGroup()" ng-if="userInGroup() && group.users[$parent.user.userID].isActive">Leave Group</button>
                 </div>
             </div>
 

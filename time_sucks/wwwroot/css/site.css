@@ -304,3 +304,7 @@ nav a {
         color: black;
     }
 
+    .noDataFound {
+        margin-top: -100%;
+        margin-left: -7%;
+    }
