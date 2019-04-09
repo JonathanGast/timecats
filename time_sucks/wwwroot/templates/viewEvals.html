@@ -64,11 +64,15 @@
                 </tr>
                 <tr>
                     <th class="sticky-column">Average rating teammate gave</th>
-                    <td class="border-right" ng-repeat="ev in e.evals">Avg</td>
+                    <td class="border-right" ng-repeat="ev in e.evals">
+                        <input class="text-center w-100 border-0" value="{{getUserAvg(e.number, ev.evalID)}}" readonly />
+                    </td>
                 </tr>
                 <tr>
                     <th class="sticky-column">Weighted Rating</th>
-                    <td class="border-right" ng-repeat="ev in e.evals">WR</td>
+                    <td class="border-right" ng-repeat="ev in e.evals">
+                        <input class="text-center w-100 border-0" value="{{getDiff(e.number, ev.evalID)}}" readonly />
+                    </td>
                 </tr>
             </tbody>
             <!--End Edit-->

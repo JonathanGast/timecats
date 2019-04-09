@@ -1308,12 +1308,12 @@ namespace time_sucks.Models
                                 while (reader.Read())
                                 {
                                     if (!columnSums.ContainsKey(e.evalID))
-                                    { 
-                                        columnSums.Add(e.evalID, reader.GetInt32("avg"));
+                                    {
+                                        columnSums.Add(e.evalID, reader.GetInt32("total"));
                                     }
                                     if (!userAvgerage.ContainsKey(e.evalID))
                                     {
-                                        userAvgerage.Add(e.evalID, reader.GetDouble("total"));
+                                        userAvgerage.Add(e.evalID, reader.GetDouble("avg"));
                                     }
                                 }
                             }

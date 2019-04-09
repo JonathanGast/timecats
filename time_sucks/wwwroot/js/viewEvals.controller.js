@@ -73,6 +73,7 @@
                             }
                             /**End Edit**/
                             $scope.group.evaluations[eval.number].responses[response.evalResponseID] = response;
+                            alert(response.userAvgerage);
                         });
                                                
                     });
@@ -345,14 +346,15 @@
         //  Jason Steadman
         //  Get user average score per eval
         $scope.getUserAvg = function (number, evalID) {
-            alert($scope.group[number].userAvgerage[evalId]);
-            return $scope.group[number].userAvgerage[evalId];
-        }
+            //  Not yet working
+            return $scope.group.evaluations[number].evals[evalID].userAvgerage;
+        };
 
         //  Get Difference
-        $scope.getDiff(number, evalID){
-            return $scope.group[number].columnSums[evalID] - $scope.group[number].userAvgerage[evalId];
-        }
+        $scope.getDiff = function (number, evalID) {
+            //  Still working on my part of this
+            return $scope.group.evaluations[number].evals[evalID].totalValue - $scope.group.evaluations[number].userAvgerage[evalID];
+        };
 
         ///////////////////////////////////////////////////////////
 
