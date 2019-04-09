@@ -330,6 +330,21 @@
             return '';
         };
 
+        //////////////////////////////////////////////////////////
+        //  Jason Steadman
+        //  Get user average score per eval
+        $scope.getUserAvg = function (number, evalID) {
+            alert($scope.group[number].userAvgerage[evalId]);
+            return $scope.group[number].userAvgerage[evalId];
+        }
+
+        //  Get Difference
+        $scope.getDiff(number, evalID){
+            return $scope.group[number].columnSums[evalID] - $scope.group[number].userAvgerage[evalId];
+        }
+
+        ///////////////////////////////////////////////////////////
+
         $scope.calculateCategoryTotal = function (categoryID, evalID) {
             return '';
         };
