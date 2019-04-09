@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Http;
@@ -617,6 +617,35 @@ namespace time_sucks.Controllers
         }
 
         /// <summary>
+        /// Get a list of this user's courses if they are an instructor
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public IActionResult GetInstructorCourses()
+        {
+            List<Course> allCourses = DBHelper.GetCourses();
+            List<Course> userCourses = new List<Course>();
+
+            foreach(Course c in allCourses)
+            {
+                if(IsInstructorForCourse(c.courseID))
+                {
+                    userCourses.Add(c);
+                }
+            }
+            return Ok(userCourses);
+        }
+
+        [HttpPost]
+        public IActionResult GetInactiveStudentsInCourse([FromBody]Object json)
+        {
+            Course course = JsonConvert.DeserializeObject<Course>(json.ToString());
+            List<User> inactiveUsers = new List<User>();
+            inactiveUsers = DBHelper.GetInactiveUsersForCourse(course.courseID);
+            return Ok(inactiveUsers);
+        }
+
+        /// <summary>
         ///
         /// </summary>
         /// <param name="userID"></param>
@@ -1139,6 +1168,21 @@ namespace time_sucks.Controllers
             {
                 List<EvalTemplate> templates = DBHelper.GetFullTemplatesForInstructor(user.userID);
                 if (templates.Count > 0) return Ok(templates);
+            }
+
+            return NoContent();
+        }
+
+        [HttpPost]
+        public IActionResult GetCoursesForInstructor([FromBody]Object json)
+        {
+            String JsonString = json.ToString();
+            User user = JsonConvert.DeserializeObject<User>(JsonString);
+
+            if(IsAdmin() || GetUserID() == user.userID)
+            {
+                List<Course> courses = DBHelper.GetCoursesForInstructor(user.userID);
+                return Ok(courses);
             }
 
             return NoContent();
