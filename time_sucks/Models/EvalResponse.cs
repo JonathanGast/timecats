@@ -16,6 +16,9 @@ namespace time_sucks.Models
         public string lastName { get; set; }
         public int evalNumber { get; set; }
         public int questionNumber { get; set; }
+        /**Jamison Edit**/
+        public int columTotal { get; set; }
+        /**End Edit**/
         public string questionText { get; set; }
         public string categoryName { get; set; }
     }
