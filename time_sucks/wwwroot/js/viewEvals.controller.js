@@ -72,8 +72,8 @@
                                 $scope.group.evaluations[eval.number].evals[response.evalID].totalValue += parseInt(response.response, 10);
                             }
                             /**End Edit**/
+                            //$scope.groups.evaluations[eval.numer].evals[response.evalID].userAvgerage = response.userAvgerage;
                             $scope.group.evaluations[eval.number].responses[response.evalResponseID] = response;
-                            alert(response.userAvgerage);
                         });
                                                
                     });
@@ -353,7 +353,7 @@
         //  Get Difference
         $scope.getDiff = function (number, evalID) {
             //  Still working on my part of this
-            return $scope.group.evaluations[number].evals[evalID].totalValue - $scope.group.evaluations[number].userAvgerage[evalID];
+            return $scope.group.evaluations[number].evals[evalID].totalValue - $scope.group.evaluations[number].evals[evalID].userAvgerage;
         };
 
         ///////////////////////////////////////////////////////////

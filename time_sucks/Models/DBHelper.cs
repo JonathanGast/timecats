@@ -1282,44 +1282,48 @@ namespace time_sucks.Models
             using (var conn = new MySqlConnection(connstring.ToString()))
             {
                 foreach(Eval e in eval)
-                { 
-                    if(!columnSums.ContainsKey(e.evalID))
+                {
+                    foreach (EvalResponse r in e.responses)
                     {
-                        conn.Open();
-                        //  Get sum, average given score, and calculate a weight
-                        using (MySqlCommand cmd = conn.CreateCommand())
+                        if (!columnSums.ContainsKey(e.evalID))
                         {
-                            cmd.CommandText =
-                                "SELECT IFNULL(SUM(average) / COUNT(*), 0) AS 'avg', IFNULL(total, 0) AS 'total' FROM " +
-                                "   (   SELECT e.groupID, SUM(response) AS 'average' FROM evalresponses er INNER JOIN evals e " +
-                                "           ON er.evalID = e.evalID " +
-                                "   WHERE e.userID =(   SELECT DISTINCT e.userID FROM evalresponses er INNER JOIN evals e " +
-                                "                       ON er.evalID = e.evalID " +
-                                "                           WHERE e.evalID = @evalID) " +
-                                "                           AND concat('',response * 1) = response " +
-                                "                       GROUP BY e.groupID) t JOIN " +
-                                "   (   SELECT evalID, SUM(response) AS 'total' FROM evalresponses " +
-                                "           WHERE evalID = @evalID AND concat('',response * 1) = response " +
-                                "       GROUP BY evalID) s;";
-                            cmd.Parameters.AddWithValue("@evalID", e.evalID);
-
-                            using (MySqlDataReader reader = cmd.ExecuteReader())
+                            conn.Open();
+                            //  Get sum, average given score, and calculate a weight
+                            using (MySqlCommand cmd = conn.CreateCommand())
                             {
-                                while (reader.Read())
+                                cmd.CommandText =
+                                    "SELECT IFNULL(SUM(average) / COUNT(*), 0) AS 'avg', IFNULL(total, 0) AS 'total' FROM " +
+                                    "   (   SELECT e.groupID, SUM(response) AS 'average' FROM evalresponses er INNER JOIN evals e " +
+                                    "           ON er.evalID = e.evalID " +
+                                    "   WHERE e.userID =(   SELECT DISTINCT e.userID FROM evalresponses er INNER JOIN evals e " +
+                                    "                       ON er.evalID = e.evalID " +
+                                    "                           WHERE e.evalID = @evalID) " +
+                                    "                           AND concat('',response * 1) = response " +
+                                    "                       GROUP BY e.groupID) t JOIN " +
+                                    "   (   SELECT evalID, SUM(response) AS 'total' FROM evalresponses " +
+                                    "           WHERE evalID = @evalID AND concat('',response * 1) = response " +
+                                    "       GROUP BY evalID) s;";
+                                cmd.Parameters.AddWithValue("@evalID", r.evalID);
+
+                                using (MySqlDataReader reader = cmd.ExecuteReader())
                                 {
-                                    if (!columnSums.ContainsKey(e.evalID))
+                                    while (reader.Read())
                                     {
-                                        columnSums.Add(e.evalID, reader.GetInt32("total"));
-                                    }
-                                    if (!userAvgerage.ContainsKey(e.evalID))
-                                    {
-                                        userAvgerage.Add(e.evalID, reader.GetDouble("avg"));
+                                        if (!columnSums.ContainsKey(e.evalID))
+                                        {
+                                            //columnSums.Add(e.evalID, reader.GetInt32("total"));
+                                        }
+                                        if (!userAvgerage.ContainsKey(e.evalID))
+                                        {
+                                            r.userAvgerage = reader.GetDouble("avg");
+                                            //userAvgerage.Add(e.evalID, reader.GetDouble("avg"));
+                                        }
                                     }
                                 }
                             }
+                            conn.Close();
                         }
-                        conn.Close();
-                    }   
+                    }
                 }
             }
             return;
