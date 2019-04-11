@@ -14,32 +14,40 @@
                 toastr["error"]("Error retrieving dashboard groups.");
             });
 
-        if ($scope.$parent.user.type === "I") {
+        if ($scope.$parent.user.type === "I" || $scope.$parent.user.type === "A") {
             $http.post("/Home/GetInstructorCourses")
                 .then(function (response) {
                     $scope.courses = response.data;
-                    for (i = 0; i < $scope.courses.length; i++) {
-                        $http.post("/Home/GetInactiveStudentsInCourse", $scope.courses[i])
-                            .then(function (response_inner) {
-                                var indexCourseID = response_inner.config.data.courseID;
-                                $scope.courseToInactiveUsers[indexCourseID] = response_inner.data;
-                                if (Object.keys($scope.courseToInactiveUsers).length > 0) {
-                                    $scope.loadInactivePanel = true;
-                                }
-                                $scope.responsesComplete += 1;
-                                if ($scope.responsesComplete == $scope.courses.length) {
-                                    $scope.loaded = true;
-                                    usSpinnerService.stop('spinner');
-                                }
-                            }, function () {
-                                var indexCourseID = response_inner.config.data.courseID;
-                                $scope.responsesComplete += 1;
-                                if ($scope.responsesComplete == $scope.courses.length) {
-                                    $scope.loaded = true;
-                                    usSpinnerService.stop('spinner');
-                                }
-                                toastr["error"]("Error retrieving inactive students for course " + $scope.courses[indexCourseID].courseName);
-                            });
+                    if ($scope.courses.length <= 0) {
+                        $scope.loadInactivePanel = false;
+                        $scope.loaded = true;
+                        usSpinnerService.stop('spinner');
+                    }
+                    else {
+                        for (i = 0; i < $scope.courses.length; i++) {
+                            $http.post("/Home/GetInactiveStudentsInCourse", $scope.courses[i])
+                                .then(function (response_inner) {
+                                    var indexCourseID = response_inner.config.data.courseID;
+                                    $scope.courseToInactiveUsers[indexCourseID] = response_inner.data;
+                                    if (Object.keys($scope.courseToInactiveUsers).length > 0) {
+                                        $scope.loadInactivePanel = true;
+                                    }
+                                    $scope.responsesComplete += 1;
+                                    if ($scope.responsesComplete == $scope.courses.length) {
+                                        $scope.loaded = true;
+                                        usSpinnerService.stop('spinner');
+                                    }
+                                }, function () {
+                                    var indexCourseID = response_inner.config.data.courseID;
+                                    $scope.responsesComplete += 1;
+                                    if ($scope.responsesComplete == $scope.courses.length) {
+                                        $scope.loaded = true;
+                                        usSpinnerService.stop('spinner');
+                                    }
+                                    toastr["error"]("Error retrieving inactive students for course " + $scope.courses[indexCourseID].courseName);
+                                });
+                        }
+
                     }
                 }, function () {
                     toastr["error"]("Error retrieving Dashboard courses");
