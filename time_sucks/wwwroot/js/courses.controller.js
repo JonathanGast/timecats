@@ -29,6 +29,24 @@
         $scope.loaded = true;
     }
 
+    // Jason Steadman
+    //  Notes:  Helper method for sorting courses by logged in instructor/admin, then alphabetically.
+    $scope.courseSort = function (c1, c2) {
+        //  If the user is an instructor or admin, this will place their classes at the top of the list
+        if ($scope.$parent.user.type === 'A' || $scope.$parent.user.type === 'I') {
+            
+            if (c1.value === $scope.$parent.user.firstName + ' ' + $scope.$parent.user.lastName) {
+                return -1;
+            }
+            else if (c2.value === $scope.$parent.user.firstName + ' ' + $scope.$parent.user.lastName) {
+                return 1;
+            }
+        }
+        //  This will alphabetically sort the courses by teacher.  I added an ORDER BY to the getCourses method
+        //  to make it assist with organizing the courses in alphabetical order.
+        return (c1.value.toLowerCase() > c2.value.toLowerCase()) ? 1 : -1;
+    } 
+    
     //Standard login check, if there is a user, load the page, if not, redirect to login
     usSpinnerService.spin('spinner');
     $http.get("/Home/CheckSession")

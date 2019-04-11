@@ -136,6 +136,34 @@
         });
 
         $scope.updateChart = function () {
+
+            //  Jason Steadman
+            //  Creates a display for a empty chart.
+            
+            var hours = 0;
+
+            for (var g in $scope.project.groups) {
+                g = $scope.project.groups[g];
+                if (!g.isActive && !$scope.config.showInactiveGroups) continue;
+
+                for (var u in g.users) {
+                    u = g.users[u];
+                    for (var t in u.timecards) {
+                        t = u.timecards[t];
+                        hours += Number(t.hours);
+                    }
+                }
+            }
+            if (hours === 0) {
+                document.getElementById("projectHours").style.visibility = "hidden";
+                document.getElementById("noProjectData").style.visibility = "visible";
+            }
+            else {
+                document.getElementById("projectHours").style.visibility = "visible";
+                document.getElementById("noProjectData").style.visibility = "hidden";
+            }
+            ////////////////////////////////////////////////////////////////////////
+            
             $scope.setData();
             myChart.update();
         }

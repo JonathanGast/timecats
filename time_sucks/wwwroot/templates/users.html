@@ -34,7 +34,8 @@
                     </div>
                 </td>
                 <td class="text-center d-none d-sm-table-cell">
-                    <select ng-model="u.type" ng-change="saveUser(u)">
+                    <!--  Jason Steadman     Notes: Removed the ability for a user to change their own type.-->
+                    <select ng-model="u.type" ng-change="saveUser(u)" ng-disabled="$parent.user.userID === u.userID">
                         <option value="S">Student</option>
                         <option value="I">Instructor</option>
                         <option value="A">Admin</option>

@@ -19,6 +19,10 @@ namespace time_sucks.Models
         /**Jamison Edit**/
         public int columTotal { get; set; }
         /**End Edit**/
+        //////////////////////////////////////////
+        //  Using this for AVG now
+        public double userAvgerage { get; set; }
+        ///////////////////////////////////////////
         public string questionText { get; set; }
         public string categoryName { get; set; }
     }

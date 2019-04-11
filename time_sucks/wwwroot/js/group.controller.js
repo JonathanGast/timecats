@@ -2,6 +2,7 @@
     $scope.loaded = false;
     $scope.group = {};
     $scope.group.users = {};
+
     //$scope.newNumber = 13; //TODO get rid of this
 
     $scope.load = function () {
@@ -66,7 +67,7 @@
                 timeOut: "",
                 description: ""
             };
-
+            
             usSpinnerService.spin('spinner');
             $http.post("/Home/CreateTimeCard", data)
                 .then(function (response) {
@@ -191,7 +192,7 @@
                     toastr["success"]("Group saved.");
                 }, function (response) {
                     if (response.status === 401) toastr["error"]("Unauthorized to change this group.");
-                    else toastr["error"]("Failed to save group, unknown error.");
+                    else toastr["error"]("Failed to save group, unknown error."); 
                 });
         }
 
@@ -204,11 +205,17 @@
             $.each($scope.group.users, function (index, user) {
                 if (Number(user.userID) === Number($scope.$parent.user.userID)) {
                     inGroup = true;
+                    //  Jason Steadman  Notes:  Give the user the ability to change the group name when the name is set
+                    //                          to "New Group" or "new group" (which is the default group name)
+                    if ($scope.group.groupName === "New Group" || $scope.group.groupName === "new group") {
+                        document.getElementById("group_name").readOnly = false;
+                    }
+                    /////////////////////////////////////////////////////////////////////////////////////////////////
                 }
             });
             return inGroup;
         }
-
+        
         $scope.userActiveInGroup = function () {
             //Checks that the current user is listed in the current group.
             if (!$scope.$parent.user) return false;
@@ -267,7 +274,7 @@
             toastr["warning"]("Deleting...");           
             $http.post("/Home/DeleteTimeCard", $scope.group.users[userID].timecards[timeslotID])
                 .then(function (response) {
-                    window.location.reload();
+                    window.location.reload();        
                 });
         }
 
@@ -311,7 +318,9 @@
                     toastr["info"]("Timeslot Updated.");
                 }, function (response) {
                     if (response.status === 401) toastr["error"]("Unauthorized to edit this time entry.");
-                    else toastr["error"]("Failed to save time entry, unknown error.");
+                    else if (response.status === 400) toastr["error"]("Failed to save time entry due to : negative time or " +
+                        "clock out in the future.");
+                    else toastr["error"]( response.status.toString() + "Failed to save time entry, unknown error.");
                 });
         }
 
@@ -386,6 +395,26 @@
         });
 
         $scope.updateChart = function () {
+            //  Jason Steadman
+            //  Creates a display for a empty chart.
+
+            var hours = 0;
+            for (var u in $scope.group.users) {
+                u = $scope.group.users[u];
+                for (var t in u.timecards) {
+                    t = u.timecards[t];
+                    hours += Number(t.hours);
+                }
+            }
+            if (hours === 0) {
+                document.getElementById("groupHours").style.visibility = "hidden";
+                document.getElementById("noData").style.visibility = "visible";
+            }
+            else {
+                document.getElementById("groupHours").style.visibility = "visible";
+                document.getElementById("noData").style.visibility = "hidden";
+            }
+            ////////////////////////////////////////////////////////////////////////
             $scope.setData();
             myChart.update();
         }
