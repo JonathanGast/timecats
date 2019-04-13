@@ -342,7 +342,7 @@
             }
             return '';
         };
-
+        
         //  Get user average score per eval
         $scope.getUserAvg = function (number, evalID) {
             return $scope.group.evaluations[number].evals[evalID].userAvgerage;

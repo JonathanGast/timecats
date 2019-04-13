@@ -20,5 +20,9 @@ namespace time_sucks.Models
         public List<EvalResponse> responses { get; set; }
         public List<User> users { get; set; }
         public List<EvalColumn> evals { get; set; }
+
+        //  States for Mr. Peterson
+        public Dictionary<int, int> columnSums { get; set;}
+        public Dictionary<int, double> userAvgerage { get; set; }
     }
 }

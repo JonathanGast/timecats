@@ -600,6 +600,41 @@ namespace time_sucks.Models
             return course;
         }
 
+        public static List<Course> GetCoursesForInstructor(int instructorID)
+        {
+            List<Course> course = new List<Course>();
+            using (var conn = new MySqlConnection(connstring.ToString()))
+            {
+                conn.Open();
+                using (MySqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "Select c.*, CONCAT(u.firstName, ' ',u.lastName) as instructorName " +
+                        "FROM courses c " +
+                        "LEFT JOIN users u ON (c.instructorID = u.userID)";
+
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        //Runs once per record retrieved
+                        while (reader.Read())
+                        {
+
+                            course.Add(new Course()
+                            {
+                                courseID = reader.GetInt32("courseID"),
+                                courseName = reader.GetString("courseName"),
+                                instructorID = reader.GetInt32("instructorID"),
+                                isActive = reader.GetBoolean("isActive"),
+                                description = reader.GetString("description"),
+                                instructorName = reader.GetString("instructorName")
+                            });
+                        }
+                    }
+                }
+            }
+            return course;
+
+        }
+
         public static Group GetGroup(int groupID)
         {
             Group group = new Group();
@@ -1266,47 +1301,39 @@ namespace time_sucks.Models
         //  Helper function that will assist with total a score per each teammate
         private static void TeammateStats( ref List<Eval> eval)
         {
-            Dictionary<int, int> columnSums = new Dictionary<int, int>();
-            Dictionary<int, double> userAvgerage = new Dictionary<int, double>();
-
-
             using (var conn = new MySqlConnection(connstring.ToString()))
             {
                 foreach(Eval e in eval)
                 {
                     foreach (EvalResponse r in e.responses)
                     {
-                        if (!columnSums.ContainsKey(e.evalID))
+                        conn.Open();
+                        //  Get avg score student gave for the specific eval
+                        using (MySqlCommand cmd = conn.CreateCommand())
                         {
-                            conn.Open();
-                            //  Get avg score student gave for the specific eval
-                            using (MySqlCommand cmd = conn.CreateCommand())
+                            cmd.CommandText =
+                            "SELECT u.userID, u.firstName, u.lastName, AVG(er.response) AS avg " +
+                            "FROM evalResponses er INNER JOIN evals e ON er.evalID = e.evalID " +
+                            "INNER JOIN users u ON u.userID = e.userID " +
+                            "INNER JOIN evalTemplateQuestions etq ON etq.evalTemplateQuestionID = er.evalTemplateQuestionID " +
+                            "LEFT JOIN evalTemplateQuestionCategories etqc ON etqc.evalTemplateQuestionCategoryID = etq.evalTemplateQuestionCategoryID " +
+                            "WHERE groupID = @groupID " +
+                            "AND e.evalID = @evalID " +
+                            "GROUP BY u.userID;"; 
+
+                            cmd.Parameters.AddWithValue("@evalID", r.evalID);
+                            cmd.Parameters.AddWithValue("@groupID", e.groupID);
+
+                            using (MySqlDataReader reader = cmd.ExecuteReader())
                             {
-                                cmd.CommandText =
-                                "SELECT u.userID, u.firstName, u.lastName, AVG(er.response) AS avg " +
-                                "FROM evalResponses er INNER JOIN evals e ON er.evalID = e.evalID " +
-                                "INNER JOIN users u ON u.userID = e.userID " +
-                                "INNER JOIN evalTemplateQuestions etq ON etq.evalTemplateQuestionID = er.evalTemplateQuestionID " +
-                                "LEFT JOIN evalTemplateQuestionCategories etqc ON etqc.evalTemplateQuestionCategoryID = etq.evalTemplateQuestionCategoryID " +
-                                "WHERE groupID = @groupID " +
-                                "AND e.evalID = @evalID " +
-                                "GROUP BY u.userID;"; 
-
-                                cmd.Parameters.AddWithValue("@evalTemplateID", e.evalTemplateID);
-
-                                cmd.Parameters.AddWithValue("@evalID", r.evalID);
-                                cmd.Parameters.AddWithValue("@groupID", e.groupID);
-
-                                using (MySqlDataReader reader = cmd.ExecuteReader())
+                                while (reader.Read())
                                 {
-                                    while (reader.Read())
-                                    {
-                                        r.userAvgerage = reader.GetDouble("avg");
-                                    }
+                                    r.userAvgerage = reader.GetDouble("avg");
                                 }
                             }
-                            conn.Close();
                         }
+                        conn.Close();
+                        
                     }
                 }
             }
@@ -1605,6 +1632,34 @@ namespace time_sucks.Models
                                 userID = reader.GetInt32("userID"),
                                 firstName = reader.GetString("firstName"),
                                 lastName = reader.GetString("lastName"),
+                            });
+                        }
+                    }
+                }
+            }
+            return users;
+        }
+
+        public static List<User> GetInactiveUsersForCourse(int courseID)
+        {
+            List<User> users = new List<User>();
+            using (var conn = new MySqlConnection(connstring.ToString()))
+            {
+                conn.Open();
+                using (MySqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "SELECT * FROM uCourses uc INNER JOIN users u ON uc.userID = u.userID WHERE uc.courseID = @courseID AND uc.isActive = 0";
+                    cmd.Parameters.Add("@courseID", MySqlDbType.Int32).Value = courseID;
+
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            users.Add(new User()
+                            {
+                                userID = reader.GetInt32("userID"),
+                                firstName = reader.GetString("firstName"),
+                                lastName = reader.GetString("lastName")
                             });
                         }
                     }
