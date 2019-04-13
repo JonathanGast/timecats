@@ -52,8 +52,13 @@
                         $scope.group.evaluations[eval.number].templateQuestions = {};
                         $scope.group.evaluations[eval.number].responses = {};
                         $scope.group.evaluations[eval.number].evals = {};
+
                         $.each(eval.evals, function (index, evalColumn) {
                             $scope.group.evaluations[eval.number].evals[evalColumn.evalID] = evalColumn;
+                            /****Jamison Edit******/
+                            $scope.group.evaluations[eval.number].evals[evalColumn.evalID].totalValue = 0;
+                            $scope.group.evaluations[eval.number].evals[evalColumn.evalID].userAvgerage = 0;
+                            /**End Edit**/
                         });
                         $.each(eval.categories, function (index, category) {
                             $scope.group.evaluations[eval.number].categories[category.evalTemplateQuestionCategoryID] = category;
@@ -62,8 +67,16 @@
                             $scope.group.evaluations[eval.number].templateQuestions[templateQuestion.evalTemplateQuestionID] = templateQuestion;
                         });
                         $.each(eval.responses, function (index, response) {
+                            /**Jamison Edit**/
+                            //check to see if a response is text or an int... if int, add to the total count
+                            if (Number.isInteger(parseInt(response.response, 10)) == true) {
+                                $scope.group.evaluations[eval.number].evals[response.evalID].totalValue += parseInt(response.response, 10);
+                            }
+                            /**End Edit**/
+                            $scope.group.evaluations[eval.number].evals[response.evalID].userAvgerage = parseFloat(response.userAvgerage);
                             $scope.group.evaluations[eval.number].responses[response.evalResponseID] = response;
                         });
+                                               
                     });
 
 
@@ -330,9 +343,27 @@
             return '';
         };
 
+        //  Get user average score per eval
+        $scope.getUserAvg = function (number, evalID) {
+            return $scope.group.evaluations[number].evals[evalID].userAvgerage;
+        };
+
+        //  Get Difference
+        $scope.getDiff = function (number, evalID) {
+            return $scope.group.evaluations[number].evals[evalID].totalValue - $scope.group.evaluations[number].evals[evalID].userAvgerage;
+        };
+
         $scope.calculateCategoryTotal = function (categoryID, evalID) {
             return '';
         };
+
+        /**Jamison Edit**/
+        $scope.getTotal = function (number, evalID) {
+            return $scope.group.evaluations[number].evals[evalID].totalValue;
+        };
+        /**End Edit**/
+
+
 
         $scope.loaded = true;
     };

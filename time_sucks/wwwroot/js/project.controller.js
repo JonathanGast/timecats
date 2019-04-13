@@ -136,10 +136,7 @@
         });
 
         $scope.updateChart = function () {
-
-            //  Jason Steadman
-            //  Creates a display for a empty chart.
-            
+            //  The section below creates a display for a empty chart.            
             var hours = 0;
 
             for (var g in $scope.project.groups) {
@@ -162,7 +159,6 @@
                 document.getElementById("projectHours").style.visibility = "visible";
                 document.getElementById("noProjectData").style.visibility = "hidden";
             }
-            ////////////////////////////////////////////////////////////////////////
             
             $scope.setData();
             myChart.update();

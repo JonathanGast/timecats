@@ -255,16 +255,10 @@
                         toastr["success"]("Category deleted.");
                         delete $scope.evaluations[$scope.config.currentTemplate].categories[category.evalTemplateQuestionCategoryID];
                         for (evalTemplateQuestionID in $scope.evaluations[$scope.config.currentTemplate].templateQuestions) {
-                            //  Jason Steadman - - Notes: Deletes all questions that belong to this category.
-                            ////////////////////////////////////////////////////////////////////////////////////////////////////
+                            //  Deletes all questions that belong to this category.
                             if ($scope.evaluations[$scope.config.currentTemplate].templateQuestions[evalTemplateQuestionID].evalTemplateQuestionCategoryID === category.evalTemplateQuestionCategoryID) {
                                 delete $scope.evaluations[$scope.config.currentTemplate].templateQuestions[evalTemplateQuestionID].evalTemplateQuestionCategoryID;
                             }
-                            ////////////////////////////////////////////////////////////////////////////////////////////////////
-                            /*
-                            if ($scope.evaluations[$scope.config.currentTemplate].templateQuestions[evalTemplateQuestionID].evalTemplateQuestionCategoryID === category.evalTemplateQuestionCategoryID) {
-                                $scope.evaluations[$scope.config.currentTemplate].templateQuestions[evalTemplateQuestionID].evalTemplateQuestionCategoryID = 0;
-                            } */
                         }
                     }, function () {
                         usSpinnerService.stop('spinner');

@@ -29,8 +29,7 @@
         $scope.loaded = true;
     }
 
-    // Jason Steadman
-    //  Notes:  Helper method for sorting courses by logged in instructor/admin, then alphabetically.
+    //  Helper method for sorting courses by logged in instructor/admin, then alphabetically.
     $scope.courseSort = function (c1, c2) {
         //  If the user is an instructor or admin, this will place their classes at the top of the list
         if ($scope.$parent.user.type === 'A' || $scope.$parent.user.type === 'I') {

@@ -1080,9 +1080,7 @@ namespace time_sucks.Controllers
 
             TimeCard timecard = JsonConvert.DeserializeObject<TimeCard>(JsonString);
 
-            //  Jason Steadman - - Notes:  Checks the time input on the server side to stop any manual posts that
-            //                      are not valid.
-            /////////////////////////////////////////////////////////////////////////////////////////////////////
+            //  Checks the time input on the server side to stop any manual posts that are not valid.
             DateTime timeIn, timeOut;
 
             //  Is time in a date?,  is time out a date?
@@ -1092,8 +1090,7 @@ namespace time_sucks.Controllers
             { 
                 return BadRequest("Invalid time entered");
             }
-            /////////////////////////////// END /////////////////////////////////////////////////////////////////
-            ///
+
             else if (IsAdmin() || GetUserID() == timecard.userID || IsInstructorForCourse(GetCourseForGroup(timecard.groupID)))
             {
                 if (DBHelper.SaveTime(timecard)) return Ok();

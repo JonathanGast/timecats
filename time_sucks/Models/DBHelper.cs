@@ -7,19 +7,11 @@ namespace time_sucks.Models
     public class DBHelper
     {
         //TODO Make this a better system user 
-       /*
         static private MySqlConnectionStringBuilder connstring = new MySqlConnectionStringBuilder("" +
             "Server=cs4450.cj7o28wmyp47.us-east-2.rds.amazonaws.com;" +
             "UID=Logan;" +
             "password=password;" +
             "database=cs4450");     
-        /*/
-        // Local version
-        static private MySqlConnectionStringBuilder connstring = new MySqlConnectionStringBuilder("" +
-            "Server=localhost;" +
-            "UID=Logan;" +
-            "password=password;" +
-            "database=cs4450");   
         
         public static long AddUser(User user)
         {
@@ -1093,6 +1085,7 @@ namespace time_sucks.Models
                     }
                 }
             }
+            TeammateStats(ref evals);
             return evals;
         }
 
@@ -1266,8 +1259,60 @@ namespace time_sucks.Models
                     }
                 }
             }
+            TeammateStats(ref evals);
             return evals;
         }
+
+        //  Helper function that will assist with total a score per each teammate
+        private static void TeammateStats( ref List<Eval> eval)
+        {
+            Dictionary<int, int> columnSums = new Dictionary<int, int>();
+            Dictionary<int, double> userAvgerage = new Dictionary<int, double>();
+
+
+            using (var conn = new MySqlConnection(connstring.ToString()))
+            {
+                foreach(Eval e in eval)
+                {
+                    foreach (EvalResponse r in e.responses)
+                    {
+                        if (!columnSums.ContainsKey(e.evalID))
+                        {
+                            conn.Open();
+                            //  Get avg score student gave for the specific eval
+                            using (MySqlCommand cmd = conn.CreateCommand())
+                            {
+                                cmd.CommandText =
+                                "SELECT u.userID, u.firstName, u.lastName, AVG(er.response) AS avg " +
+                                "FROM evalResponses er INNER JOIN evals e ON er.evalID = e.evalID " +
+                                "INNER JOIN users u ON u.userID = e.userID " +
+                                "INNER JOIN evalTemplateQuestions etq ON etq.evalTemplateQuestionID = er.evalTemplateQuestionID " +
+                                "LEFT JOIN evalTemplateQuestionCategories etqc ON etqc.evalTemplateQuestionCategoryID = etq.evalTemplateQuestionCategoryID " +
+                                "WHERE groupID = @groupID " +
+                                "AND e.evalID = @evalID " +
+                                "GROUP BY u.userID;"; 
+
+                                cmd.Parameters.AddWithValue("@evalTemplateID", e.evalTemplateID);
+
+                                cmd.Parameters.AddWithValue("@evalID", r.evalID);
+                                cmd.Parameters.AddWithValue("@groupID", e.groupID);
+
+                                using (MySqlDataReader reader = cmd.ExecuteReader())
+                                {
+                                    while (reader.Read())
+                                    {
+                                        r.userAvgerage = reader.GetDouble("avg");
+                                    }
+                                }
+                            }
+                            conn.Close();
+                        }
+                    }
+                }
+            }
+            return;
+        }
+        
 
         public static User GetUser(string username, string password)
         {
@@ -1948,14 +1993,9 @@ namespace time_sucks.Models
 
                     if (cmd.ExecuteNonQuery() > 0)
                     {
-                        //  Jason Steadman - - Notes:  Added to delete all questions that below to a deleted category.
-                        //////////////////////////////////////////////////////////////////////////////////////
+                        //  Added to delete all questions that below to a deleted category.
                         cmd.CommandText = "DELETE FROM evalTemplateQuestions " +
                                       "WHERE evalTemplateQuestionCategoryID = @evalTemplateQuestionCategoryID";
-                        /////////////////////////////////////////////////////////////////////////////////////////
-                        /*
-                        cmd.CommandText = "UPDATE evalTemplateQuestions SET evalTemplateQuestionCategoryID = 0 " +
-                                          "WHERE evalTemplateQuestionCategoryID = @evalTemplateQuestionCategoryID"; */
                         cmd.ExecuteNonQuery();
                         return true;
                     }

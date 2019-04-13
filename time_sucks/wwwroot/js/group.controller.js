@@ -205,12 +205,11 @@
             $.each($scope.group.users, function (index, user) {
                 if (Number(user.userID) === Number($scope.$parent.user.userID)) {
                     inGroup = true;
-                    //  Jason Steadman  Notes:  Give the user the ability to change the group name when the name is set
-                    //                          to "New Group" or "new group" (which is the default group name)
+                    //  Give the user the ability to change the group name when the name is set
+                    //  to "New Group" or "new group" (which is the default group name)
                     if ($scope.group.groupName === "New Group" || $scope.group.groupName === "new group") {
                         document.getElementById("group_name").readOnly = false;
                     }
-                    /////////////////////////////////////////////////////////////////////////////////////////////////
                 }
             });
             return inGroup;
@@ -395,9 +394,7 @@
         });
 
         $scope.updateChart = function () {
-            //  Jason Steadman
-            //  Creates a display for a empty chart.
-
+            //  The section below creates a display for a empty chart.
             var hours = 0;
             for (var u in $scope.group.users) {
                 u = $scope.group.users[u];
@@ -414,7 +411,7 @@
                 document.getElementById("groupHours").style.visibility = "visible";
                 document.getElementById("noData").style.visibility = "hidden";
             }
-            ////////////////////////////////////////////////////////////////////////
+            
             $scope.setData();
             myChart.update();
         }
